@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, View, Text, Button, Dimensions } from "react-native";
 import { EditModal } from "../components/EditModal";
+import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import { AppCard } from "../components/ui/AppCard";
+import { AppTextBold } from "../components/ui/AppTextBold";
+import { AppButton } from "../components/ui/AppButton";
 import { THEME } from "../theme";
 
 export const TodoScreen = ({ goBack, todo, onRemove, onSave }) => {
@@ -14,32 +17,32 @@ export const TodoScreen = ({ goBack, todo, onRemove, onSave }) => {
 
     return (
         <View>
-            <EditModal 
-                visible={modal} 
-                onCancel={() => setModal(false)} 
-                todo={todo.title} 
-                onSave={saveHandler} 
+            <EditModal
+                visible={modal}
+                onCancel={() => setModal(false)}
+                todo={todo.title}
+                onSave={saveHandler}
             />
             <AppCard>
-                <Text style={styles.title} >{todo.title}</Text>
+                <AppTextBold style={styles.title} >{todo.title}</AppTextBold>
                 <View style={styles.editButton}>
-                    <Button title="Edit" onPress={() => setModal(true)} />
+                    <AppButton onPress={() => setModal(true)}>
+                        <FontAwesome name='edit' size={20} />
+                    </AppButton>
                 </View>
             </AppCard>
             <View style={styles.buttons}>
                 <View style={styles.button}>
-                    <Button
-                        color={THEME.GREY_COLOR}
-                        title="Back"
-                        onPress={goBack}
-                    />
+                    <AppButton color={THEME.GREY_COLOR} onPress={goBack}>
+                        <AntDesign name='back' size={20} />
+                    </AppButton>
                 </View>
                 <View style={styles.button}>
-                    <Button
+                    <AppButton
                         color={THEME.DANGER_COLOR}
-                        title="Delete"
-                        onPress={() => { onRemove(todo.id) }}
-                    />
+                        onPress={() => { onRemove(todo.id) }}>
+                        <FontAwesome name="remove" size={20} />
+                    </AppButton>
                 </View>
             </View>
         </View>
@@ -53,7 +56,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     button: {
-        width: '40%'
+        width: Dimensions.get('window').width > 400 ? 150 : 120,
     },
     title: {
         fontSize: 22,

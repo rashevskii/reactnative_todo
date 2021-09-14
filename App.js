@@ -1,16 +1,38 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
+import * as Font from 'expo-font';
 import { StyleSheet, View, Alert } from 'react-native';
+import AppLoading from 'expo-app-loading';
+
 import { Navbar } from './src/components/Navbar';
 import { MainScreen } from './src/screens/MainScreen';
 import { TodoScreen } from './src/screens/TodoScreen';
+import { THEME } from './src/theme';
+
+async function loadApplication() {
+  await Font.loadAsync({
+    'roboto-regular': require('./assets/fonts/Roboto-Regular.ttf'),
+    'roboto-bold': require('./assets/fonts/Roboto-Bold.ttf')
+  })
+}
 
 export default function App() {
-  const [todoId, setTodoId] = useState('2');
+  const [isReady, setIsReady] = useState(false);
+  const [todoId, setTodoId] = useState(null);
   const [todos, setTodos] = useState([
     { id: '1', title: 'Изучить react-native' },
     { id: '2', title: 'Написать приложение' },
   ]);
+
+  if (!isReady) {
+    return (
+      <AppLoading
+        startAsync={loadApplication}
+        onError={(err) => console.log(err)}
+        onFinish={() => setIsReady(true)}
+      />
+    )
+  }
 
   const addTodo = (title) => {
     setTodos(prev => [...prev, {
@@ -42,7 +64,7 @@ export default function App() {
   }
 
   const updateTodo = (id, title) => {
-    setTodos(old => 
+    setTodos(old =>
       old.map(todo => {
         if (todo.id === id) {
           todo.title = title
@@ -79,7 +101,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingHorizontal: THEME.PADDING_HORIZONTAL,
+    paddingVertical: 20,
   },
 });
